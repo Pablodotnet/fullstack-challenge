@@ -9,25 +9,47 @@ class Input extends React.Component {
     name: PropTypes.string,
     onChange: PropTypes.func,
     labelText: PropTypes.string,
-    className: PropTypes.string
+    className: PropTypes.string,
+    placeholder: PropTypes.string,
+    helpertext: PropTypes.string,
+    invalid: PropTypes.bool,
   }
 
   render() {
-    let { name, value, onChange, type, labelText, className = '', placeholder = '' } = this.props
+    let {
+      name,
+      value,
+      onChange,
+      type,
+      labelText,
+      className = '',
+      placeholder = '',
+      helpertext = '',
+      invalid = false,
+    } = this.props;
+
     const props = {
       name,
       value,
       onChange,
       type,
       className,
-      placeholder
-    }
+      placeholder,
+      helpertext,
+      invalid,
+    };
 
     return (
       <div style={{'paddingBottom': '10px'}}>
         <label>
           {labelText && `${labelText}: `}
           <input {...props} />
+          {
+            props.invalid &&
+            <small style={{'color': 'red'}}>
+              {props.helpertext}
+            </small>
+          }
         </label>
       </div>
     )

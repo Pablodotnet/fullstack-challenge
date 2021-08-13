@@ -10,6 +10,37 @@ class AddLocationForm extends React.Component {
     addLocationValues: PropTypes.object
   }
 
+  errors = {};
+
+  handleChange($event) {
+    const { name, value } = $event.target;
+    if (this.isValidInput(name, value)) {
+      Object.prototype.hasOwnProperty.call(this.errors, name) &&
+      delete this.errors[name];
+    } else if (!Object.prototype.hasOwnProperty.call(this.errors, name)) {
+      this.errors[name] = true;
+    }
+    this.props.onChange($event);
+  }
+
+  isValidInput(inputName, value) {
+    const validators = {
+      location_name: (value) => !!value.length,
+      longitude: (value) => this.isInRange(value, -180, 180),
+      latitude: (value) => this.isInRange(value, -90, 90),
+    };
+    return validators[inputName] && validators[inputName](value);
+  }
+
+  isInRange(value, min, max) {
+    const valueAsNumber = Number(value);
+    return valueAsNumber >= min && valueAsNumber <= max;
+  }
+
+  isValidForm() {
+    return Object.keys(this.errors).length;
+  }
+
   render() {
     let {
       longitude = '',
@@ -24,16 +55,18 @@ class AddLocationForm extends React.Component {
         <Input
           labelText='Location name'
           value={location_name}
-          onChange={this.props.onChange}
+          onChange={this.handleChange.bind(this)}
           placeholder='Your new location name'
           className='input'
           name='location_name'
           type='text'
+          invalid={this.errors.location_name}
+          helpertext='Location name cannot be empty'
         />
         <Input
           labelText='Opens at'
           value={open_time}
-          onChange={this.props.onChange}
+          onChange={this.handleChange.bind(this)}
           placeholder='09:00'
           className='input'
           name='open_time'
@@ -42,7 +75,7 @@ class AddLocationForm extends React.Component {
         <Input
           labelText='Closes at'
           value={close_time}
-          onChange={this.props.onChange}
+          onChange={this.handleChange.bind(this)}
           placeholder='18:00'
           className='input'
           name='close_time'
@@ -51,26 +84,35 @@ class AddLocationForm extends React.Component {
         <Input
           labelText='Longitude'
           value={longitude}
-          onChange={this.props.onChange}
+          onChange={this.handleChange.bind(this)}
           placeholder='-103.3733'
           className='input'
           name='longitude'
           type='text'
+          invalid={this.errors.longitude}
+          helpertext='Longitude must be between -180 and 180'
         />
         <Input
           labelText='Latitude'
           value={latitude}
-          onChange={this.props.onChange}
+          onChange={this.handleChange.bind(this)}
           placeholder='20.669142'
           className='input'
           name='latitude'
           type='text'
+          invalid={this.errors.latitude}
+          helpertext='Latitude must be between -90 and 90'
         />
-        <Input
+        {/* <Input
           value='Submit'
           type='submit'
           className='button popup-button'
-        />
+        /> */}
+        <button
+          type='submit'
+          className='button popup-button'>
+            Submit
+        </button>
       </form>
     );
   }
