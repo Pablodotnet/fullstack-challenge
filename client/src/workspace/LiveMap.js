@@ -211,7 +211,8 @@ class LiveMap extends React.Component {
         <Map
           containerStyle={{
             height: '98vh',
-            width: '100%'
+            width: '100%',
+            marginTop: `${isAddingLocation ? '3vh' : '0vh'}`,
           }}
           style='mapbox://styles/mapbox/navigation-guidance-day-v2'
           center={center}

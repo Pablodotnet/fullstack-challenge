@@ -10,17 +10,25 @@ class AddLocationForm extends React.Component {
     addLocationValues: PropTypes.object
   }
 
-  errors = {};
+  // Set by default because is a required input
+  errors = {
+    location_name: true,
+  };
+  isValidForm = !this.hasErrors();
 
   handleChange($event) {
-    const { name, value } = $event.target;
+    this.handleValidations($event.target);
+    this.props.onChange($event);
+  }
+
+  handleValidations({name, value}) {
     if (this.isValidInput(name, value)) {
       Object.prototype.hasOwnProperty.call(this.errors, name) &&
       delete this.errors[name];
     } else if (!Object.prototype.hasOwnProperty.call(this.errors, name)) {
       this.errors[name] = true;
     }
-    this.props.onChange($event);
+    this.isValidForm = !this.hasErrors();
   }
 
   isValidInput(inputName, value) {
@@ -37,7 +45,7 @@ class AddLocationForm extends React.Component {
     return valueAsNumber >= min && valueAsNumber <= max;
   }
 
-  isValidForm() {
+  hasErrors() {
     return Object.keys(this.errors).length;
   }
 
@@ -109,8 +117,9 @@ class AddLocationForm extends React.Component {
           className='button popup-button'
         /> */}
         <button
+          disabled={!this.isValidForm}
           type='submit'
-          className='button popup-button'>
+          className={`button popup-button ${!this.isValidForm ? 'disabled-button' : ''}`}>
             Submit
         </button>
       </form>

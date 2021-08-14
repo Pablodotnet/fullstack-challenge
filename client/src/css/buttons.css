@@ -27,6 +27,12 @@
   background-color:#52a1d8;
 }
 
+.disabled-button {
+  /* background-color: red; */
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .warning {
   background-color: #cc7a65;
 }
